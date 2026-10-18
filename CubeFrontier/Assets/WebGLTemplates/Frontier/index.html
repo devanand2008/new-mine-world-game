@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#091923">
+  <title>Cube Frontier: Eclipse | Create something wonderful</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#091923;color:#eef5f0;font:15px system-ui,sans-serif}header{height:64px;padding:0 3vw;display:flex;gap:20px;align-items:center;justify-content:space-between;background:#102b38;border-bottom:1px solid #295261}header strong{letter-spacing:.07em;font-size:14px}header strong:before{content:'+';display:inline-grid;place-items:center;width:27px;height:27px;background:#6ee0c7;color:white;border-radius:0;margin-right:12px;font-size:22px}header span{color:#a8c4cd;font-size:12px}main{position:relative;width:100%;height:calc(100dvh - 108px);min-height:320px;background:#091923}canvas{width:100%;height:100%;display:block;outline:none}#loading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 30%,#214b5c,#091923 75%);text-align:center;padding:24px}#loading h1{font-size:clamp(28px,5vw,64px);letter-spacing:-.05em;margin:14px;line-height:1.05}#loading h2{color:#6ee0c7;letter-spacing:.24em;font-size:13px;font-weight:700}#loading p{color:#a8c4cd;max-width:620px;line-height:1.6}progress{width:min(320px,80vw);height:10px;accent-color:#6ee0c7;border:0;border-radius:0;overflow:hidden}progress::-webkit-progress-bar{background:#193c49}progress::-webkit-progress-value{background:#6ee0c7;border-radius:0}button{padding:9px 17px;border:1px solid #377282;border-radius:0;background:#183d49;color:#eef7e1;cursor:pointer;font-weight:600}button:hover{background:#245866}button:focus-visible{outline:3px solid #fdbe52;outline-offset:3px}footer{height:44px;padding:0 3vw;display:flex;align-items:center;justify-content:space-between;color:#a8c4cd;font-size:12px}#retry{display:none;margin-top:20px}.blocks{position:relative;width:94px;height:75px;margin-bottom:12px}.blocks i{position:absolute;width:39px;height:39px;border-radius:0;box-shadow:inset -6px -6px #00000012;animation:bob 2.8s ease-in-out infinite}.blocks i:nth-child(1){background:#87bd77;left:5px;top:32px}.blocks i:nth-child(2){background:#f1bd58;left:47px;top:32px;animation-delay:.3s}.blocks i:nth-child(3){background:#ee8f76;left:26px;top:-10px;animation-delay:.6s}@keyframes bob{50%{transform:translateY(-6px)}}@media(prefers-reduced-motion:reduce){.blocks i{animation:none}}@media(max-width:640px){header span,footer span:last-child{display:none}}
+  </style>
+</head>
+<body>
+  <header><strong>CUBE FRONTIER / ECLIPSE</strong><span>THE HORIZON UPDATE &nbsp; / &nbsp; 0.8</span><button id="fullscreen" type="button">Fullscreen</button></header>
+  <main id="game"><canvas id="unity-canvas" tabindex="0" aria-label="Cube Frontier: Eclipse game. Keyboard and mouse required."></canvas><section id="loading" aria-live="polite"><div class="blocks" aria-hidden="true"><i></i><i></i><i></i></div><h2>SMALL BLOCKS. GRAND ADVENTURES.</h2><h1>Build your<br>next adventure.</h1><p id="status">Preparing your next horizon...</p><progress id="progress" aria-label="Game loading progress" max="1" value="0"></progress><button id="retry" type="button">Reload game</button></section></main>
+  <footer><span>WASD move &nbsp; / &nbsp; E craft &nbsp; / &nbsp; J quest &nbsp; / &nbsp; T trade &nbsp; / &nbsp; G fly-through &nbsp; / &nbsp; Esc pause &amp; save</span><span>Your worlds stay on this browser and device.</span></footer>
+  <script>
+    const canvas=document.getElementById('unity-canvas'),status=document.getElementById('status');let gameInstance;
+    function fail(error){document.getElementById('loading').style.display='flex';status.textContent='The game could not load. '+String(error);document.getElementById('retry').style.display='block';document.getElementById('progress').hidden=true;}
+    document.getElementById('retry').onclick=()=>location.reload();
+    document.getElementById('fullscreen').onclick=()=>{if(gameInstance)gameInstance.SetFullscreen(1);else document.getElementById('game').requestFullscreen().catch(fail);};
+    const loader=document.createElement('script');loader.src='Build/{{{ LOADER_FILENAME }}}';loader.onerror=()=>fail('Could not fetch the Unity loader. Check the host build path.');
+    loader.onload=()=>createUnityInstance(canvas,{dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'Cube Frontier',productName:'Cube Frontier Eclipse',productVersion:'0.8.0',matchWebGLToCanvasSize:true,devicePixelRatio:Math.min(window.devicePixelRatio,1.5)},value=>{document.getElementById('progress').value=value;status.textContent='Preparing your next horizon ... '+Math.round(value*100)+'%';}).then(instance=>{gameInstance=instance;document.getElementById('loading').style.display='none';canvas.focus();}).catch(fail);
+    document.body.appendChild(loader);
+  </script>
+</body>
+</html>
+
